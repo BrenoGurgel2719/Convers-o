@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atende.AI — Seu Atendente Inteligente 24h para Negócios Locais</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── TOKENS ─────────────────────────────────────────────── */
+    :root {
+      --ink:     #0A1A0E;
+      --forest:  #0C2818;
+      --forest2: #163520;
+      --lime:    #C8FF00;
+      --lime2:   #B0E800;
+      --cream:   #F7F5EF;
+      --cream2:  #EDE9DF;
+      --white:   #FFFFFF;
+      --muted:   #6B7B6E;
+      --border:  #D6D1C6;
+      --red:     #FF3737;
+
+      --font-serif: 'Instrument Serif', Georgia, serif;
+      --font-sans:  'Sora', sans-serif;
+
+      --r: 6px;
+      --shadow: 0 2px 8px rgba(10,26,14,.08), 0 8px 32px rgba(10,26,14,.06);
+      --shadow-lg: 0 8px 32px rgba(10,26,14,.14), 0 24px 64px rgba(10,26,14,.10);
+    }
+
+    /* ─── RESET ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--cream); color: var(--ink); font-family: var(--font-sans); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+    a { text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    button { cursor: pointer; border: none; font-family: var(--font-sans); }
+
+    /* ─── UTILITIES ──────────────────────────────────────────── */
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+    .section { padding: 96px 0; }
+
+    .label {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-sans);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .label::before { content:''; width:16px; height:2px; background:currentColor; border-radius:2px; }
+
+    .label-lime { color: var(--lime); }
+    .label-lime::before { background: var(--lime); }
+
+    h2.display {
+      font-family: var(--font-serif);
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 400;
+      line-height: 1.12;
+      letter-spacing: -.01em;
+      color: var(--ink);
+    }
+    h2.display em { font-style: italic; color: var(--forest); }
+    h2.display .lime { color: var(--forest); background: var(--lime); padding: 0 6px; border-radius: 3px; font-style: normal; }
+
+    /* ─── CHECKOUT BUTTON ────────────────────────────────────── */
+    .btn-checkout {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--lime);
+      color: var(--forest);
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 16px 32px;
+      border-radius: var(--r);
+      letter-spacing: -.01em;
+      transition: background .18s, transform .14s, box-shadow .18s;
+      box-shadow: 0 4px 20px rgba(200,255,0,.30);
+      position: relative;
+    }
+    .btn-checkout:hover {
+      background: var(--lime2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(200,255,0,.45);
+    }
+    .btn-checkout:active { transform: scale(.97); }
+    .btn-checkout svg { flex-shrink: 0; }
+
+    .btn-checkout-lg {
+      font-size: 1.12rem;
+      padding: 20px 40px;
+      border-radius: 8px;
+    }
+
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent;
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: .9rem;
+      font-weight: 600;
+      padding: 14px 24px;
+      border-radius: var(--r);
+      border: 2px solid var(--border);
+      transition: border-color .18s;
+    }
+    .btn-ghost:hover { border-color: var(--ink); }
+
+    /* ─── NOISE TEXTURE ──────────────────────────────────────── */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* ─── TOPBAR NOTICE ──────────────────────────────────────── */
+    .topbar {
+      background: var(--forest);
+      color: rgba(255,255,255,.80);
+      font-size: .78rem;
+      font-weight: 500;
+      text-align: center;
+      padding: 10px 24px;
+      letter-spacing: .03em;
+    }
+    .topbar strong { color: var(--lime); }
+
+    /* ─── NAVBAR ─────────────────────────────────────────────── */
+    .navbar {
+      position: sticky; top: 0; z-index: 99;
+      background: rgba(247,245,239,.94);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .nav-logo {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      color: var(--ink);
+      letter-spacing: -.02em;
+    }
+    .nav-logo span { color: var(--forest); background: var(--lime); padding: 0 5px; border-radius: 3px; }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+    .nav-link { font-size: .86rem; font-weight: 500; color: var(--muted); transition: color .2s; }
+    .nav-link:hover { color: var(--ink); }
+    @media (max-width: 640px) { .nav-link { display: none; } }
+
+    /* ─── HERO ───────────────────────────────────────────────── */
+    .hero {
+      background: var(--forest);
+      padding: 80px 0 96px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Diagonal lime stripe */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -120px; right: -180px;
+      width: 560px; height: 560px;
+      background: radial-gradient(ellipse, rgba(200,255,0,.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: -80px;
+      width: 400px; height: 400px;
+      background: radial-gradient(ellipse, rgba(200,255,0,.05) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero .container { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    @media (max-width: 840px) { .hero .container { grid-template-columns: 1fr; } .hero-mock { display: none; } }
+
+    .hero-eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+    .hero-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(200,255,0,.12);
+      border: 1px solid rgba(200,255,0,.25);
+      color: var(--lime);
+      font-size: .74rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 100px;
+    }
+    .hero-pill .dot { width:6px; height:6px; border-radius:50%; background:var(--lime); animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1}50%{opacity:.2} }
+
+    .hero-heading {
+      font-family: var(--font-serif);
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      color: #fff;
+      margin-bottom: 22px;
+    }
+    .hero-heading em { font-style: italic; color: var(--lime); }
+
+    .hero-sub { color: rgba(255,255,255,.55); font-weight: 300; font-size: 1.06rem; max-width: 440px; margin-bottom: 36px; }
+
+    .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 44px; }
+
+    .hero-trust { display: flex; flex-wrap: wrap; gap: 24px; }
+    .htrust { display: flex; align-items: center; gap: 8px; font-size: .82rem; color: rgba(255,255,255,.50); font-weight: 400; }
+    .htrust svg { color: var(--lime); flex-shrink: 0; }
+
+    /* ── Chat Mock ─────────────────── */
+    .hero-mock { position: relative; }
+    .chat-window {
+      background: var(--cream);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      max-width: 340px;
+      margin-left: auto;
+    }
+    .chat-header {
+      background: var(--forest2);
+      padding: 14px 18px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .chat-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--lime);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      color: var(--forest);
+      font-weight: 400;
+      flex-shrink: 0;
+    }
+    .chat-name { font-size: .88rem; font-weight: 600; color: #fff; }
+    .chat-status { font-size: .72rem; color: var(--lime); display: flex; align-items: center; gap: 4px; }
+    .chat-status::before { content:''; width:6px; height:6px; border-radius:50%; background:var(--lime); }
+
+    .chat-body { padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+    .bubble {
+      max-width: 82%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: .84rem;
+      line-height: 1.5;
+    }
+    .bubble-in {
+      background: var(--white);
+      border: 1px solid var(--border);
+      color: var(--ink);
+      border-bottom-left-radius: 3px;
+      align-self: flex-start;
+    }
+    .bubble-out {
+      background: var(--forest);
+      color: rgba(255,255,255,.90);
+      border-bottom-right-radius: 3px;
+      align-self: flex-end;
+    }
+    .bubble-time { font-size: .66rem; color: var(--muted); margin-top: 2px; }
+    .bubble-time-right { text-align: right; color: rgba(255,255,255,.40); }
+    .typing { display: flex; gap: 4px; align-items: center; padding: 10px 14px; }
+    .typing span { width:7px; height:7px; border-radius:50%; background:var(--muted); animation: type-bounce .8s ease-in-out infinite; }
+    .typing span:nth-child(2) { animation-delay:.12s; }
+    .typing span:nth-child(3) { animation-delay:.24s; }
+    @keyframes type-bounce { 0%,80%,100%{transform:scale(.8);opacity:.4} 40%{transform:scale(1);opacity:1} }
+
+    .chat-badge {
+      position: absolute;
+      top: -14px; right: -14px;
+      background: var(--lime);
+      color: var(--forest);
+      font-size: .78rem;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 100px;
+      box-shadow: 0 4px 16px rgba(200,255,0,.35);
+      white-space: nowrap;
+      animation: levitate 3s ease-in-out infinite;
+    }
+    @keyframes levitate { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+
+    /* ─── PAIN / PROBLEM ─────────────────────────────────────── */
+    .pain { background: var(--white); }
+    .pain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    @media (max-width: 760px) { .pain-grid { grid-template-columns: 1fr; gap: 40px; } }
+
+    .pain-cards { display: flex; flex-direction: column; gap: 14px; }
+    .pain-card {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 22px;
+      display: flex; align-items: flex-start; gap: 14px;
+      transition: transform .2s, border-color .2s;
+    }
+    .pain-card:hover { transform: translateX(4px); border-color: rgba(12,40,24,.2); }
+    .pain-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+    .pain-card h4 { font-weight: 600; font-size: .95rem; color: var(--ink); margin-bottom: 3px; letter-spacing: -.01em; }
+    .pain-card p  { font-size: .84rem; color: var(--muted); font-weight: 300; line-height: 1.55; }
+
+    /* ─── FEATURES ───────────────────────────────────────────── */
+    .features { background: var(--forest); position: relative; overflow: hidden; }
+    .features::before {
+      content: '';
+      position: absolute; top:0; left:0; right:0; bottom:0;
+      background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 40px,
+        rgba(200,255,0,.02) 40px,
+        rgba(200,255,0,.02) 41px
+      );
+      pointer-events: none;
+    }
+    .features .container { position: relative; z-index: 1; }
+    .features h2.display { color: #fff; }
+    .features h2.display em { color: var(--lime); }
+
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 56px; }
+    @media (max-width: 840px) { .features-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 500px) { .features-grid { grid-template-columns: 1fr; } }
+
+    .feat-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 10px;
+      padding: 28px 24px;
+      transition: background .25s, border-color .25s;
+    }
+    .feat-card:hover {
+      background: rgba(200,255,0,.05);
+      border-color: rgba(200,255,0,.15);
+    }
+    .feat-num {
+      font-family: var(--font-serif);
+      font-size: 2.4rem;
+      font-style: italic;
+      color: rgba(200,255,0,.18);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+    .feat-title { font-weight: 600; font-size: 1.02rem; color: #fff; margin-bottom: 8px; letter-spacing: -.01em; }
+    .feat-desc  { font-size: .86rem; color: rgba(255,255,255,.45); font-weight: 300; line-height: 1.65; }
+
+    /* ─── HOW IT WORKS ───────────────────────────────────────── */
+    .how { background: var(--cream2); }
+    .how-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 56px; position: relative; }
+    @media (max-width: 700px) { .how-steps { grid-template-columns: 1fr; } }
+
+    .how-steps::before {
+      content: '';
+      position: absolute;
+      top: 28px; left: calc(16.6% + 28px); right: calc(16.6% + 28px);
+      height: 2px;
+      background: repeating-linear-gradient(90deg, var(--lime) 0, var(--lime) 8px, transparent 8px, transparent 16px);
+    }
+    @media (max-width: 700px) { .how-steps::before { display: none; } }
+
+    .how-step { text-align: center; }
+    .how-step-num {
+      width: 56px; height: 56px;
+      background: var(--forest);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.3rem;
+      color: var(--lime);
+      margin: 0 auto 20px;
+      position: relative; z-index: 1;
+      box-shadow: 0 0 0 6px var(--cream2);
+    }
+    .how-step h4 { font-weight: 700; font-size: 1.02rem; color: var(--ink); margin-bottom: 8px; letter-spacing: -.01em; }
+    .how-step p  { font-size: .88rem; color: var(--muted); font-weight: 300; line-height: 1.6; max-width: 240px; margin: 0 auto; }
+
+    /* ─── PRICING ────────────────────────────────────────────── */
+    .pricing { background: var(--white); }
+    .pricing-header { text-align: center; max-width: 600px; margin: 0 auto 56px; }
+
+    .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 840px; margin: 0 auto; }
+    @media (max-width: 640px) { .plans { grid-template-columns: 1fr; } }
+
+    .plan-card {
+      background: var(--cream);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 36px 32px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .plan-card:hover { box-shadow: var(--shadow); }
+
+    .plan-card.featured {
+      background: var(--forest);
+      border-color: var(--forest);
+      position: relative;
+    }
+    .plan-badge {
+      position: absolute;
+      top: -13px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--lime);
+      color: var(--forest);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    .plan-name { font-weight: 700; font-size: .82rem; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 12px; color: var(--muted); }
+    .plan-card.featured .plan-name { color: rgba(255,255,255,.50); }
+
+    .plan-price { font-family: var(--font-serif); font-size: 3.2rem; letter-spacing: -.03em; color: var(--ink); line-height: 1; }
+    .plan-card.featured .plan-price { color: var(--lime); }
+    .plan-price sup { font-size: 1.4rem; vertical-align: super; font-family: var(--font-sans); font-weight: 600; }
+    .plan-period { font-size: .84rem; color: var(--muted); margin: 6px 0 24px; font-weight: 300; }
+    .plan-card.featured .plan-period { color: rgba(255,255,255,.40); }
+
+    .plan-divider { border: none; border-top: 1px solid var(--border); margin-bottom: 24px; }
+    .plan-card.featured .plan-divider { border-color: rgba(255,255,255,.10); }
+
+    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+    .plan-features li { display: flex; align-items: flex-start; gap: 10px; font-size: .88rem; color: var(--ink); font-weight: 400; }
+    .plan-card.featured .plan-features li { color: rgba(255,255,255,.75); }
+    .plan-features li::before { content: '✓'; color: var(--forest); font-weight: 700; flex-shrink: 0; }
+    .plan-card.featured .plan-features li::before { color: var(--lime); }
+
+    .plan-card .btn-checkout { width: 100%; justify-content: center; }
+
+    .btn-checkout-outline {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%;
+      background: transparent;
+      border: 2px solid var(--border);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: .95rem;
+      font-weight: 700;
+      padding: 15px 24px;
+      border-radius: var(--r);
+      cursor: pointer;
+      letter-spacing: -.01em;
+      transition: border-color .2s;
+    }
+    .btn-checkout-outline:hover { border-color: var(--ink); }
+
+    .guarantee {
+      text-align: center;
+      margin-top: 32px;
+      font-size: .82rem;
+      color: var(--muted);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .guarantee svg { color: var(--forest); }
+
+    /* ─── SOCIAL PROOF / NUMBERS ─────────────────────────────── */
+    .numbers { background: var(--lime); padding: 56px 0; }
+    .numbers-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    @media (max-width: 640px) { .numbers-grid { grid-template-columns: repeat(2, 1fr); } }
+    .num-item { text-align: center; }
+    .num-val {
+      font-family: var(--font-serif);
+      font-size: 3.2rem;
+      font-style: italic;
+      color: var(--forest);
+      line-height: 1;
+      letter-spacing: -.02em;
+    }
+    .num-label { font-size: .76rem; font-weight: 600; color: var(--forest2); letter-spacing: .1em; text-transform: uppercase; margin-top: 6px; opacity: .7; }
+
+    /* ─── TESTIMONIALS ───────────────────────────────────────── */
+    .testimonials { background: var(--cream); }
+    .test-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 56px; }
+    @media (max-width: 840px) { .test-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 520px) { .test-grid { grid-template-columns: 1fr; } }
+
+    .test-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+    }
+    .test-business {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 16px;
+    }
+    .test-biz-icon {
+      width: 40px; height: 40px;
+      background: var(--forest);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .test-biz-name { font-weight: 700; font-size: .88rem; color: var(--ink); letter-spacing: -.01em; }
+    .test-biz-type { font-size: .74rem; color: var(--muted); font-weight: 400; }
+    .test-stars { color: #F59E0B; font-size: .9rem; margin-bottom: 10px; }
+    .test-text { font-size: .9rem; color: var(--ink); line-height: 1.7; font-style: italic; font-weight: 300; }
+    .test-result {
+      margin-top: 14px;
+      background: rgba(200,255,0,.15);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--forest);
+    }
+
+    /* ─── FAQ ────────────────────────────────────────────────── */
+    .faq { background: var(--white); }
+    .faq-wrap { max-width: 700px; margin: 56px auto 0; }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-q {
+      width: 100%; text-align: left;
+      background: transparent;
+      padding: 20px 0;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: .96rem;
+      color: var(--ink);
+      cursor: pointer;
+      letter-spacing: -.01em;
+      transition: color .2s;
+    }
+    .faq-q:hover { color: var(--forest); }
+    .faq-chevron { flex-shrink: 0; transition: transform .3s; }
+    .faq-item.open .faq-chevron { transform: rotate(180deg); }
+    .faq-a {
+      font-size: .9rem;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 1.7;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s ease, padding .35s ease;
+    }
+    .faq-item.open .faq-a { max-height: 300px; padding-bottom: 20px; }
+
+    /* ─── FINAL CTA ──────────────────────────────────────────── */
+    .final-cta { background: var(--lime); padding: 96px 0; position: relative; overflow: hidden; }
+    .final-cta::before {
+      content: '';
+      position: absolute; top:-100px; right:-100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(12,40,24,.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .final-inner { max-width: 700px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
+    .final-inner .display {
+      font-family: var(--font-serif);
+      font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: -.02em;
+      color: var(--forest);
+      margin-bottom: 18px;
+    }
+    .final-inner .display em { font-style: italic; }
+    .final-inner p { font-size: 1.04rem; color: rgba(12,40,24,.65); font-weight: 300; max-width: 480px; margin: 0 auto 36px; }
+
+    .btn-checkout-dark {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: var(--forest);
+      color: var(--lime);
+      font-family: var(--font-sans);
+      font-size: 1.08rem;
+      font-weight: 700;
+      padding: 20px 40px;
+      border-radius: 8px;
+      letter-spacing: -.01em;
+      transition: background .18s, transform .14s;
+      box-shadow: 0 8px 32px rgba(12,40,24,.20);
+    }
+    .btn-checkout-dark:hover { background: var(--forest2); transform: translateY(-2px); }
+    .btn-checkout-dark:active { transform: scale(.97); }
+
+    .final-note { margin-top: 18px; font-size: .8rem; color: rgba(12,40,24,.55); display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    footer { background: var(--forest); padding: 48px 0 28px; }
+    .footer-top { display: flex; flex-wrap: wrap; gap: 48px; justify-content: space-between; margin-bottom: 40px; }
+    .footer-logo { font-family: var(--font-serif); font-size: 1.4rem; color: #fff; margin-bottom: 10px; }
+    .footer-logo span { color: var(--forest); background: var(--lime); padding: 0 5px; border-radius: 3px; }
+    .footer-tagline { font-size: .84rem; color: rgba(255,255,255,.38); font-weight: 300; max-width: 240px; line-height: 1.6; }
+    .footer-col h4 { font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.40); margin-bottom: 14px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-col ul li { font-size: .84rem; color: rgba(255,255,255,.40); font-weight: 300; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,.07); padding-top: 24px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+    .footer-bottom p { font-size: .76rem; color: rgba(255,255,255,.25); }
+
+    /* ─── SCROLL ANIMATIONS ──────────────────────────────────── */
+    .fade-up { opacity:0; transform:translateY(22px); transition:opacity .55s, transform .55s; }
+    .fade-up.visible { opacity:1; transform:none; }
+    [data-delay="1"] { transition-delay: .08s; }
+    [data-delay="2"] { transition-delay: .16s; }
+    [data-delay="3"] { transition-delay: .24s; }
+    [data-delay="4"] { transition-delay: .32s; }
+    [data-delay="5"] { transition-delay: .40s; }
+
+    @media (max-width: 480px) {
+      .hero-heading { font-size: 2.4rem; }
+      .btn-checkout-lg { padding: 16px 28px; font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    🎉 <strong>Lançamento:</strong> Primeiros 50 clientes ganham onboarding gratuito — restam poucas vagas.
+  </div>
+
+  <!-- ═══ NAVBAR ═══════════════════════════════════════════════════ -->
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <div class="nav-logo">Atende<span>.AI</span></div>
+      <div class="nav-right">
+        <a href="#como-funciona" class="nav-link">Como funciona</a>
+        <a href="#precos" class="nav-link">Preços</a>
+        <a href="#checkout-hero"
+           class="btn-checkout"
+           id="nav-checkout"
+           data-checkout-location="navbar"
+           style="font-size:.84rem;padding:10px 20px;">
+          Começar agora →
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO ══════════════════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="container">
+
+      <!-- Texto -->
+      <div>
+        <div class="hero-eyebrow">
+          <div class="hero-pill"><span class="dot"></span>Novo · Inteligência Artificial</div>
+        </div>
+
+        <h1 class="hero-heading">
+          Seu negócio<br>
+          atendendo<br>
+          <em>24 horas.</em><br>
+          Sem você.
+        </h1>
+
+        <p class="hero-sub">
+          Um agente de IA que responde clientes, tira dúvidas, confirma pedidos e agenda horários — automaticamente, pelo WhatsApp ou Instagram.
+        </p>
+
+        <div class="hero-ctas">
+          <a href="#checkout-hero"
+             class="btn-checkout btn-checkout-lg"
+             id="hero-cta-principal"
+             data-checkout-location="hero-principal">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            Quero meu agente agora
+          </a>
+          <a href="#como-funciona" class="btn-ghost" style="color:rgba(255,255,255,.6);border-color:rgba(255,255,255,.15);">Ver como funciona</a>
+        </div>
+
+        <div class="hero-trust">
+          <div class="htrust">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+            Sem mensalidade oculta
+          </div>
+          <div class="htrust">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+            Ativo em até 24h
+          </div>
+          <div class="htrust">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+            Suporte incluso
+          </div>
+        </div>
+      </div>
+
+      <!-- Mock de conversa -->
+      <div class="hero-mock">
+        <div class="chat-badge">⚡ Respondendo agora</div>
+        <div class="chat-window">
+          <div class="chat-header">
+            <div class="chat-avatar">AI</div>
+            <div>
+              <div class="chat-name">Atendente Lanchonete Sabor &amp; Arte</div>
+              <div class="chat-status">online agora</div>
+            </div>
+          </div>
+          <div class="chat-body">
+            <div>
+              <div class="bubble bubble-in">Oi! Vocês entregam até a Rua das Flores?</div>
+              <div class="bubble-time">14:22</div>
+            </div>
+            <div>
+              <div class="bubble bubble-out">Olá! 😊 Sim, entregamos até lá! Taxa de entrega: R$ 5. Tempo médio: 35 min. O que vai querer?</div>
+              <div class="bubble-time bubble-time-right">14:22</div>
+            </div>
+            <div>
+              <div class="bubble bubble-in">1 X-Burgão e 1 suco de laranja por favor</div>
+              <div class="bubble-time">14:23</div>
+            </div>
+            <div class="bubble bubble-out" style="align-self:flex-end; max-width:82%;">
+              <div class="typing"><span></span><span></span><span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══ NÚMEROS ═══════════════════════════════════════════════════ -->
+  <div class="numbers">
+    <div class="container">
+      <div class="numbers-grid">
+        <div class="num-item">
+          <div class="num-val">+300</div>
+          <div class="num-label">Negócios atendidos</div>
+        </div>
+        <div class="num-item">
+          <div class="num-val">24h</div>
+          <div class="num-label">Disponibilidade</div>
+        </div>
+        <div class="num-item">
+          <div class="num-val">92%</div>
+          <div class="num-label">Redução de tempo manual</div>
+        </div>
+        <div class="num-item">
+          <div class="num-val">4.9★</div>
+          <div class="num-label">Avaliação dos clientes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PROBLEMA ══════════════════════════════════════════════════ -->
+  <section class="section pain">
+    <div class="container">
+      <div class="pain-grid">
+        <div class="fade-up">
+          <span class="label">O problema</span>
+          <h2 class="display" style="margin-top:14px;">
+            Você perde vendas<br>enquanto <em>faz outra coisa.</em>
+          </h2>
+          <p style="color:var(--muted);font-weight:300;margin-top:18px;font-size:1.02rem;max-width:420px;">
+            Toda mensagem sem resposta rápida é um cliente que vai para o concorrente. E você não pode ficar o dia todo no celular.
+          </p>
+        </div>
+        <div class="pain-cards fade-up">
+          <div class="pain-card">
+            <div class="pain-icon">😤</div>
+            <div>
+              <h4>"Perguntei e ninguém respondeu"</h4>
+              <p>68% dos clientes desistem se não recebem resposta em até 10 minutos.</p>
+            </div>
+          </div>
+          <div class="pain-card">
+            <div class="pain-icon">📱</div>
+            <div>
+              <h4>Você responde as mesmas coisas toda hora</h4>
+              <p>Horário, cardápio, preço, endereço — todo dia, o dia todo.</p>
+            </div>
+          </div>
+          <div class="pain-card">
+            <div class="pain-icon">🌙</div>
+            <div>
+              <h4>Mensagens chegam fora do horário</h4>
+              <p>Clientes mandam mensagem à noite e de manhã já foram embora.</p>
+            </div>
+          </div>
+          <div class="pain-card">
+            <div class="pain-icon">📉</div>
+            <div>
+              <h4>Funcionário de atendimento custa caro</h4>
+              <p>Salário, encargos e ainda fica no celular fazendo outra coisa.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FEATURES ═════════════════════════════════════════════════ -->
+  <section class="section features" id="funcionalidades">
+    <div class="container">
+      <div class="fade-up" style="max-width:580px;">
+        <span class="label label-lime">O que o Atende.AI faz</span>
+        <h2 class="display" style="margin-top:14px;color:#fff;">
+          Um atendente que <em>nunca dorme,</em><br>nunca reclama.
+        </h2>
+      </div>
+      <div class="features-grid">
+        <div class="feat-card fade-up" data-delay="1">
+          <div class="feat-num">01</div>
+          <div class="feat-title">Responde no WhatsApp e Instagram</div>
+          <div class="feat-desc">Conectado onde seus clientes já estão. Resposta imediata 24h por dia, 7 dias por semana.</div>
+        </div>
+        <div class="feat-card fade-up" data-delay="2">
+          <div class="feat-num">02</div>
+          <div class="feat-title">Tira dúvidas e envia o cardápio/tabela</div>
+          <div class="feat-desc">Você cadastra seus produtos, serviços e perguntas frequentes. O agente sabe tudo de cor.</div>
+        </div>
+        <div class="feat-card fade-up" data-delay="3">
+          <div class="feat-num">03</div>
+          <div class="feat-title">Fecha pedidos e confirma agendamentos</div>
+          <div class="feat-desc">Recebe o pedido, confirma o horário e avisa você com um resumo. Sem você precisar digitar nada.</div>
+        </div>
+        <div class="feat-card fade-up" data-delay="4">
+          <div class="feat-num">04</div>
+          <div class="feat-title">Qualifica e encaminha leads quentes</div>
+          <div class="feat-desc">Quando o cliente está pronto para fechar, o agente te avisa para você entrar e finalizar.</div>
+        </div>
+        <div class="feat-card fade-up" data-delay="5">
+          <div class="feat-num">05</div>
+          <div class="feat-title">Aprende com o seu negócio</div>
+          <div class="feat-desc">Configuração personalizada com o seu tom de voz, promoções e regras do seu estabelecimento.</div>
+        </div>
+        <div class="feat-card fade-up" data-delay="5">
+          <div class="feat-num">06</div>
+          <div class="feat-title">Painel de conversas e relatórios</div>
+          <div class="feat-desc">Veja tudo que foi respondido, quantos clientes entraram em contato e quais perguntas mais aparecem.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ COMO FUNCIONA ════════════════════════════════════════════ -->
+  <section class="section how" id="como-funciona">
+    <div class="container">
+      <div class="fade-up" style="text-align:center;max-width:560px;margin:0 auto 0;">
+        <span class="label" style="justify-content:center;">Como funciona</span>
+        <h2 class="display" style="margin-top:14px;">
+          Do pagamento ao<br><em>atendente no ar:</em> 3 passos.
+        </h2>
+      </div>
+      <div class="how-steps">
+        <div class="how-step fade-up" data-delay="1">
+          <div class="how-step-num">1</div>
+          <h4>Você contrata e preenche um formulário</h4>
+          <p>Nos conta sobre seu negócio, horários, produtos e como você gosta de atender.</p>
+        </div>
+        <div class="how-step fade-up" data-delay="2">
+          <div class="how-step-num">2</div>
+          <h4>Configuramos tudo para você</h4>
+          <p>Nossa equipe treina o agente com as informações do seu negócio. Você não precisa fazer nada técnico.</p>
+        </div>
+        <div class="how-step fade-up" data-delay="3">
+          <div class="how-step-num">3</div>
+          <h4>Agente ativo em até 24 horas</h4>
+          <p>Conectamos no seu WhatsApp ou Instagram e o agente começa a atender automaticamente.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ DEPOIMENTOS ══════════════════════════════════════════════ -->
+  <section class="section testimonials">
+    <div class="container">
+      <div class="fade-up" style="text-align:center;">
+        <span class="label" style="justify-content:center;">Resultados reais</span>
+        <h2 class="display" style="margin-top:14px;">Negócios que já <em>respiram tranquilos.</em></h2>
+      </div>
+      <div class="test-grid">
+        <div class="test-card fade-up" data-delay="1">
+          <div class="test-business">
+            <div class="test-biz-icon">🍔</div>
+            <div>
+              <div class="test-biz-name">Lanchonete Sabor &amp; Arte</div>
+              <div class="test-biz-type">Fortaleza, CE</div>
+            </div>
+          </div>
+          <div class="test-stars">★★★★★</div>
+          <p class="test-text">"Antes eu ficava no celular respondendo até de madrugada. Agora o agente cuida de tudo e só me chama quando o pedido tá confirmado. Aumentei os pedidos em quase 40%."</p>
+          <div class="test-result">📈 +40% pedidos no primeiro mês</div>
+        </div>
+        <div class="test-card fade-up" data-delay="2">
+          <div class="test-business">
+            <div class="test-biz-icon">💇</div>
+            <div>
+              <div class="test-biz-name">Beleza em Foco — Salão</div>
+              <div class="test-biz-type">Natal, RN</div>
+            </div>
+          </div>
+          <div class="test-stars">★★★★★</div>
+          <p class="test-text">"Minha agenda estava sempre confusa por WhatsApp. Hoje o agente agenda, confirma e até manda lembrete pro cliente. Não tenho mais faltas."</p>
+          <div class="test-result">📅 Zero faltas em 2 meses</div>
+        </div>
+        <div class="test-card fade-up" data-delay="3">
+          <div class="test-business">
+            <div class="test-biz-icon">🔧</div>
+            <div>
+              <div class="test-biz-name">Carlos — Eletricista Autônomo</div>
+              <div class="test-biz-type">Recife, PE</div>
+            </div>
+          </div>
+          <div class="test-stars">★★★★★</div>
+          <p class="test-text">"Trabalho sozinho e não conseguia responder enquanto estava num serviço. Perdia cliente todo dia. Agora o Atende.AI atende e me manda um resumo. Simples assim."</p>
+          <div class="test-result">⚡ Nenhum cliente sem resposta</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PREÇOS ════════════════════════════════════════════════════ -->
+  <section class="section pricing" id="precos">
+    <div class="container">
+      <div class="pricing-header fade-up">
+        <span class="label" style="justify-content:center;">Planos</span>
+        <h2 class="display" style="margin-top:14px;">Escolha e comece <em>hoje.</em></h2>
+        <p style="color:var(--muted);font-weight:300;margin-top:14px;font-size:1.02rem;">Sem contrato longo. Cancele quando quiser.</p>
+      </div>
+
+      <div class="plans">
+        <!-- Plano Essencial -->
+        <div class="plan-card fade-up">
+          <div class="plan-name">Essencial</div>
+          <div class="plan-price"><sup>R$</sup>197</div>
+          <div class="plan-period">/mês · cobrado mensalmente</div>
+          <hr class="plan-divider" />
+          <ul class="plan-features">
+            <li>1 canal (WhatsApp ou Instagram)</li>
+            <li>Até 500 conversas/mês</li>
+            <li>Configuração pelo nosso time</li>
+            <li>Cardápio / tabela de serviços</li>
+            <li>Agendamento simples</li>
+            <li>Suporte por chat</li>
+          </ul>
+          <button class="btn-checkout-outline"
+                  id="checkout-essencial"
+                  data-checkout-location="pricing-essencial"
+                  onclick="handleCheckout(this)">
+            Começar com o Essencial →
+          </button>
+        </div>
+
+        <!-- Plano Pro -->
+        <div class="plan-card featured fade-up" data-delay="1">
+          <div class="plan-badge">⚡ Mais escolhido</div>
+          <div class="plan-name">Profissional</div>
+          <div class="plan-price"><sup>R$</sup>347</div>
+          <div class="plan-period">/mês · cobrado mensalmente</div>
+          <hr class="plan-divider" />
+          <ul class="plan-features">
+            <li>WhatsApp + Instagram simultâneos</li>
+            <li>Conversas ilimitadas</li>
+            <li>Qualificação e encaminhamento de leads</li>
+            <li>Envio de catálogo e promoções</li>
+            <li>Agendamento com lembrete automático</li>
+            <li>Painel de métricas e relatórios</li>
+            <li>Onboarding dedicado</li>
+            <li>Suporte prioritário via WhatsApp</li>
+          </ul>
+          <a href="#checkout-hero"
+             class="btn-checkout"
+             id="checkout-pro"
+             data-checkout-location="pricing-pro"
+             style="justify-content:center;width:100%;">
+            Quero o Profissional →
+          </a>
+        </div>
+      </div>
+
+      <div class="guarantee fade-up">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Garantia de 7 dias. Se não gostar, devolvemos 100% do valor.
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FAQ ═══════════════════════════════════════════════════════ -->
+  <section class="section faq">
+    <div class="container">
+      <div class="fade-up" style="text-align:center;">
+        <span class="label" style="justify-content:center;">Perguntas frequentes</span>
+        <h2 class="display" style="margin-top:14px;">Tirou sua <em>dúvida?</em></h2>
+      </div>
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <button class="faq-q">
+            Preciso saber programar para usar?
+            <svg class="faq-chevron" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="faq-a">Não. Nossa equipe configura tudo para você. Você só precisa nos contar sobre seu negócio e pronto. Nada de tecnologia complicada.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">
+            Quanto tempo leva para o agente estar ativo?
+            <svg class="faq-chevron" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="faq-a">Após o pagamento e preenchimento do formulário de configuração, o agente fica no ar em até 24 horas úteis.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">
+            O agente substitui 100% o atendimento humano?
+            <svg class="faq-chevron" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="faq-a">Para a maioria das interações do dia a dia, sim. Para situações que precisam da sua decisão final — como um orçamento complexo — o agente te avisa para você entrar na conversa.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">
+            Funciona para qualquer tipo de negócio local?
+            <svg class="faq-chevron" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="faq-a">Sim! Trabalhamos com lanchonetes, salões de beleza, clínicas, prestadores de serviço autônomo, pet shops, oficinas, estúdios e muito mais.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q">
+            Posso cancelar quando quiser?
+            <svg class="faq-chevron" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="faq-a">Sim. Não há fidelidade. Você pode cancelar a qualquer momento, sem multa. E temos garantia de 7 dias caso não fique satisfeito.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FINAL CTA ══════════════════════════════════════════════════ -->
+  <section class="final-cta" id="checkout-hero">
+    <div class="container">
+      <div class="final-inner fade-up">
+        <div class="display">
+          Seu negócio merece<br>um atendente que<br><em>nunca falha.</em>
+        </div>
+        <p>Configure hoje. Amanhã o agente já está no ar atendendo seus clientes enquanto você foca no que importa.</p>
+        <a href="https://pay.atende.ai/checkout"
+           class="btn-checkout-dark"
+           id="checkout-final"
+           data-checkout-location="final-cta">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Contratar agora — a partir de R$ 197/mês
+        </a>
+        <div class="final-note">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          7 dias de garantia · Sem contrato · Configuração feita pela equipe
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ════════════════════════════════════════════════════ -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div>
+          <div class="footer-logo">Atende<span>.AI</span></div>
+          <p class="footer-tagline">Atendimento inteligente para negócios locais. Simples, rápido e sem complicação.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Produto</h4>
+          <ul>
+            <li>Como funciona</li>
+            <li>Funcionalidades</li>
+            <li>Planos e preços</li>
+            <li>Cases de sucesso</li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Suporte</h4>
+          <ul>
+            <li>Central de ajuda</li>
+            <li>WhatsApp de suporte</li>
+            <li>Política de privacidade</li>
+            <li>Termos de uso</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 Atende.AI. Todos os direitos reservados.</p>
+        <p>Página criada para laboratório de tags GTM</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══ JAVASCRIPT ════════════════════════════════════════════════ -->
+  <script>
+    /* ── IntersectionObserver: fade-up ──────────────────────── */
+    const io = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+      { threshold: 0.10 }
+    );
+    document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+    /* ── FAQ accordion ──────────────────────────────────────── */
+    document.querySelectorAll('.faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+
+    /* ── Checkout: push para dataLayer (GTM) ───────────────── */
+    /*
+      TODOS os elementos com [data-checkout-location] disparam
+      o evento 'checkout_click' no dataLayer.
+
+      No GTM:
+        1. Crie uma Data Layer Variable: "checkout_location"  (key: checkout_location)
+        2. Crie uma Data Layer Variable: "checkout_button_id" (key: checkout_button_id)
+        3. Crie um Trigger → Custom Event: "checkout_click"
+        4. Crie a Tag de Conversão do Google Ads usando esse Trigger
+    */
+    function pushCheckoutEvent(el) {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event:              'checkout_click',
+        checkout_button_id: el.id,
+        checkout_location:  el.getAttribute('data-checkout-location'),
+        checkout_plan:      el.getAttribute('data-checkout-location').includes('pro')
+                              ? 'profissional'
+                              : el.getAttribute('data-checkout-location').includes('essencial')
+                              ? 'essencial'
+                              : 'geral',
+        page_title:         document.title,
+      });
+      console.log('[GTM dataLayer] checkout_click →', window.dataLayer[window.dataLayer.length - 1]);
+    }
+
+    /* Links <a> com data-checkout-location */
+    document.querySelectorAll('a[data-checkout-location]').forEach(link => {
+      link.addEventListener('click', function () { pushCheckoutEvent(this); });
+    });
+
+    /* Função para <button> (plano Essencial) */
+    function handleCheckout(el) {
+      pushCheckoutEvent(el);
+      /* Aqui você redirecionaria: window.location.href = 'https://pay.atende.ai/checkout?plan=essencial'; */
+      console.log('Redirecionando para checkout...');
+    }
+  </script>
+
+</body>
+</html>
